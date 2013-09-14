@@ -92,7 +92,8 @@ function CDPlayer() {
   };
   
   this.pause = function() {
-    isPlaying = false; 
+    isPlaying = false;
+    console.log('Paused.');
     return this;
   };
   
@@ -103,11 +104,14 @@ function CDPlayer() {
 }
 
 var composed = Compositor(Car, Engine, CDPlayer);
-composed.model = 'Toyota Composed';
+composed.model = 'Ford Paladin';
 composed.start();
 composed
   .addTrack('Cirith Ungol - Atom Smasher')
   .addTrack('Cirith Ungol - Black Machine')
   .addTrack('Cirith Ungol - Finger of Scorn')
   .addTrack('Cirith Ungol - King of the Dead')
-  .play();
+  .play()
+  .next()
+  .next()
+  .pause();
