@@ -1,16 +1,25 @@
-if (!Object.create) {
-    Object.create = (function(){
-        function F(){}
-
-        return function(o){
-            if (arguments.length != 1) {
-                throw new Error('Object.create implementation only accepts one parameter.');
-            }
-            F.prototype = o;
-            return new F();
-        }
-    })();
+function Compositor(){
+  
+  var args = Array.prototype.slice.call(arguments, 1),
+    o = arguments[0],
+    i = 0,
+    len = args.length,
+    obj;
+  
+  function F() {}
+  F.prototype = o;
+  obj = new F();
+  
+    
+  console.log(obj);
+    
+  for ( ; i < len; i += 1) {
+    (args[i]).call(obj);
+  }
+  return obj;
 }
+
+// example
 
 function Car() {
   this.model = '';
