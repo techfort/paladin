@@ -11,8 +11,6 @@ function Compositor(){
   obj = new F();
   
     
-  console.log(obj);
-    
   for ( ; i < len; i += 1) {
     (args[i]).call(obj);
   }
@@ -44,13 +42,19 @@ function CDPlayer() {
   var playlist = [];
   var position = -1;
   var isPlaying = false;
+  var self = this;
+  
+  function playing() {
+    console.log(self.model + ' -> Playing: ' + playlist[position]); 
+  }
+  
   this.play = function() {
     if (playlist.length > 0) {
       if (position === -1) {
         position = 0;
       }
       isPlaying = true;
-      console.log(this.model + ' -> Playing: ' + playlist[position]); 
+      playing();
     } else {
       throw 'No songs in playlist';  
     }
@@ -74,6 +78,7 @@ function CDPlayer() {
       throw 'Player is not playing!!';  
     }
     position = (position + 1) % playlist.length;
+    playing();
     return this;
   };
   
@@ -82,6 +87,7 @@ function CDPlayer() {
       throw 'Player is not playing!!';  
     }
     position = (position - 1) % playlist.length;
+    playing();
     return this;
   };
   
@@ -91,33 +97,17 @@ function CDPlayer() {
   };
   
   this.getTrack = function() {
+    playing();
     return playlist[position];  
   };
-}
-
-function Compositor(){
-  
-  var args = Array.prototype.slice.call(arguments, 1),
-    o = arguments[0],
-    i = 0,
-    len = args.length,
-    obj;
-  
-  function F() {}
-  F.prototype = o;
-  obj = new F();
-  
-    
-  console.log(obj);
-    
-  for ( ; i < len; i += 1) {
-    (args[i]).call(obj);
-  }
-  return obj;
 }
 
 var composed = Compositor(Car, Engine, CDPlayer);
 composed.model = 'Toyota Composed';
 composed.start();
-composed.addTrack('Cirith Ungol').addTrack('King of the Dead').play()
-
+composed
+  .addTrack('Cirith Ungol - Atom Smasher')
+  .addTrack('Cirith Ungol - Black Machine')
+  .addTrack('Cirith Ungol - Finger of Scorn')
+  .addTrack('Cirith Ungol - King of the Dead')
+  .play();
