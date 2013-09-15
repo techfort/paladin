@@ -1,117 +1,51 @@
-function Compositor(){
-  
-  var args = Array.prototype.slice.call(arguments, 1),
-    o = arguments[0],
-    i = 0,
-    len = args.length,
-    obj;
-  
-  function F() {}
-  F.prototype = o;
-  obj = new F();
-  
-    
-  for ( ; i < len; i += 1) {
-    (args[i]).call(obj);
-  }
-  return obj;
-}
+var Paladin = (function () {
+  'use strict';
+  var paladin = {};
+  paladin.compose = function (args) {
 
-// example
+    function Compositor(args) {
+      var o = args[0],
+        i = 0,
+        len = args.length,
+        obj;
 
-function Car() {
-  this.model = '';
-}
-
-function Engine() {
-  var cc = 1800;
-  
-  this.start = function() {
-    console.log(this.model + ' is moving...'); 
-  };
-  this.setCC = function(ccs) {
-    cc = ccs;
-    return this;
-  };
-  this.getCC = function() {
-    return cc; 
-  };
-}
-
-function CDPlayer() {
-  var playlist = [];
-  var position = -1;
-  var isPlaying = false;
-  var self = this;
-  
-  function playing() {
-    console.log(self.model + ' -> Playing: ' + playlist[position]); 
-  }
-  
-  this.play = function() {
-    if (playlist.length > 0) {
-      if (position === -1) {
-        position = 0;
+      function F() {
+        return;
       }
-      isPlaying = true;
-      playing();
-    } else {
-      throw 'No songs in playlist';  
-    }
-    return this;
-  };
-  
-  this.addTrack = function(song) {
-    playlist.push(song);
-    return this;
-  };
-  
-  this.removeTrack = function(song) {
-    if (playlist.indexOf(song) !== -1) {
-      playlist.slice(playlist.indexOf(song), 1);  
-    }
-    return this;
-  };
-  
-  this.next = function() {
-    if (!isPlaying) {
-      throw 'Player is not playing!!';  
-    }
-    position = (position + 1) % playlist.length;
-    playing();
-    return this;
-  };
-  
-  this.prev = function() {
-    if (!isPlaying) {
-      throw 'Player is not playing!!';  
-    }
-    position = (position - 1) % playlist.length;
-    playing();
-    return this;
-  };
-  
-  this.pause = function() {
-    isPlaying = false;
-    console.log('Paused.');
-    return this;
-  };
-  
-  this.getTrack = function() {
-    playing();
-    return playlist[position];  
-  };
-}
+      F.prototype = o;
+      obj = new F();
 
-var composed = Compositor(Car, Engine, CDPlayer);
-composed.model = 'Ford Paladin';
-composed.start();
-composed
-  .addTrack('Cirith Ungol - Atom Smasher')
-  .addTrack('Cirith Ungol - Black Machine')
-  .addTrack('Cirith Ungol - Finger of Scorn')
-  .addTrack('Cirith Ungol - King of the Dead')
-  .play()
-  .next()
-  .next()
-  .pause();
+      for (i; i < len; i += 1) {
+        (args[i]).call(obj);
+      }
+      return obj;
+    }
+
+    return function (states) {
+      var obj = Compositor(args), prop;
+      if (states !== undefined) {
+        for (prop in states) {
+          if (states.hasOwnProperty(prop) && typeof states[prop] !== 'function') {
+            obj[prop] = states[prop];
+          }
+        }
+      }
+      return obj;
+    };
+  };
+  return paladin;
+}());
+
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  module.exports = Paladin;
+}
+else {
+  if (typeof define === 'function' && define.amd) {
+    define([], function() {
+      return Paladin;
+    });
+  }
+  else {
+    window.paladin = Paladin;
+  }
+}
