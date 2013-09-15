@@ -88,7 +88,7 @@ function CDPlayer() {
 }
 
 
-var c = Paladin.compose([Car, Engine, CDPlayer])({ model: 'Toyota Paladin' });
+var c = Paladin.compose([Car, Engine, CDPlayer])({ model: 'Ferrari Paladin' });
 c.start()
   .addTrack('Cirith Ungol - Atom Smasher')
   .addTrack('Manilla Road - Astronomica')
