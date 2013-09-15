@@ -7,6 +7,10 @@ Javascript composition library.
 
 With Paladin you can put together all your pieces into objects which you can create on-the-fly.
 
+You can re-use your components and combine them together, cache them into functions if you intend to
+create multiple objects of the same type, or just create it on the fly, leveraging javascript's higher-order
+functions.
+
 Say you have a `Car`. All Cars have an `Engine`, but not all Cars have a `CDPlayer`.
 
 With Paladin you can simply do:
