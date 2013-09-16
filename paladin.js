@@ -4,32 +4,36 @@ var Paladin = (function () {
   paladin.compose = function (args) {
 
     function Compositor(args) {
-      var o = args[0],
-        i = 0,
-        len = args.length,
-        obj;
-
-      function F() {
-        return;
+      return function() {
+        var o = args[0],
+          i = 0,
+          len = args.length,
+          obj;
+        
+        for (i; i < len; i += 1) {
+          (args[i]).call(this);
+        }  
       }
-      F.prototype = o;
-      obj = new F();
-
-      for (i; i < len; i += 1) {
-        (args[i]).call(obj);
-      }
-      return obj;
     }
-
-    return function (states) {
-      var obj = Compositor(args), prop;
+    
+    return function (states, init) {
+      var fn = Compositor(args),
+        obj = new fn(args);
+      var  prop;
       if (states !== undefined) {
         for (prop in states) {
-          if (states.hasOwnProperty(prop) && typeof states[prop] !== 'function') {
+          if (states.hasOwnProperty(prop)) {
             obj[prop] = states[prop];
           }
         }
       }
+
+      for (prop in init) {
+        if (obj.hasOwnProperty(prop) && typeof obj[prop] === 'function' && Array.isArray(init[prop])) {
+          obj[prop].apply(obj, init[prop]);
+        }
+      }
+
       return obj;
     };
   };
@@ -46,6 +50,6 @@ else {
     });
   }
   else {
-    window.paladin = Paladin;
+    window.Paladin = Paladin;
   }
 }

@@ -99,3 +99,35 @@ c.start()
   .next()
   .next()
   .pause();
+
+
+var Hero = function () {
+  this.name = '';
+}
+
+function Sorcerer () {
+  this.cast = function(spell) {
+    console.log(this.name + ' is casting ' + spell);
+    return this;
+  };
+}
+
+function Warrior () {
+  var weapon = '';
+  this.setWeapon = function (weaponName) {
+    weapon = weaponName;
+    return this;
+  };
+}
+
+var warMage = Paladin.compose([Hero, Sorcerer, Warrior]);
+
+function battleCasting() {
+  console.log(this.name + ' is battle casting!');
+  return this;
+}
+
+var Elric = new warMage({ name: 'Elric', fight: battleCasting }, { setWeapon: ['Stormbringer'] });
+var Yrkoon = new warMage({ name: 'Yrkoon', fight: function() { console.log('Yrkoon swinging his sword!'); }}, { setWeapon: ['normal sword']});
+Elric.fight();
+Yrkoon.fight();
