@@ -101,7 +101,7 @@ c.start()
   .pause();
 
 
-var Hero = function () {
+function Character () {
   this.name = '';
 }
 
@@ -120,14 +120,38 @@ function Warrior () {
   };
 }
 
-var warMage = Paladin.compose([Hero, Sorcerer, Warrior]);
+function skills() {
+  var skills = [],
+    skillsModule;
+  skillsModule = {
+    addSkill: function(name) {
+      skills.push(name);
+      return skillsModule.addSkill;
+    },
+    getSkills: function() {
+      return skills;
+    }
+  };
+  return skillsModule;
+}
+
+
+var warMage = Paladin.compose([Character, Sorcerer, Warrior]);
+
+var superMage = Paladin.compose([warMage, function Test() { this.test = 'test....'; }]);
+
+var tester = new superMage( {name: 'Testter'});
+console.log(tester);
 
 function battleCasting() {
   console.log(this.name + ' is battle casting!');
   return this;
 }
 
-var Elric = new warMage({ name: 'Elric', fight: battleCasting }, { setWeapon: ['Stormbringer'] });
+var Elric = new warMage({ name: 'Elric', fight: battleCasting }, { setWeapon: ['Stormbringer'] }, [ skills ]);
 var Yrkoon = new warMage({ name: 'Yrkoon', fight: function() { console.log('Yrkoon swinging his sword!'); }}, { setWeapon: ['normal sword']});
+
 Elric.fight();
 Yrkoon.fight();
+Elric.skills.addSkill('Summon Auroch')('Wield Stormbringer')('Blow the horn of Doom');
+console.log(Elric.skills.getSkills().join(', '));

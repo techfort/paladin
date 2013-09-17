@@ -16,10 +16,13 @@ var Paladin = (function () {
       }
     }
     
-    return function (states, init) {
+    return function (states, init, modules) {
       var fn = Compositor(args),
-        obj = new fn(args);
-      var  prop;
+        obj = new fn(args),
+        prop,
+        i,
+        len;
+
       if (states !== undefined) {
         for (prop in states) {
           if (states.hasOwnProperty(prop)) {
@@ -34,9 +37,23 @@ var Paladin = (function () {
         }
       }
 
+
+      if (!!modules && Array.isArray(modules)) {
+        len = modules.length;
+        for (i = 0; i < len; i += 1) {
+          paladin.addModule(obj, modules[i]);
+        }
+      }
+
       return obj;
     };
   };
+
+  
+  paladin.addModule = function(parent, module) {
+    parent[arguments[1].name] = (module).call(parent);
+  };
+  
   return paladin;
 }());
 
