@@ -47,6 +47,15 @@ c.start()
   .pause();
 ```
 
+## States, init and modules
+
+The copmosed function takes three optional parameters, states, init and modules.
+The states object sets public members to the passed values. I.e. `{ name: 'joe' }` sets the public member name to joe.
+With this you can attach functions as methods (see example below).
+Init takes method names and arrays for parameters. I.e. `{ setName: ['joe'] }` calls the method `setName` and passes the parameter `'joe'`. 
+
+## Complete Example
+
 And finally a more complete example. A javascript summary of Moorcock's Stormbringer Saga...
 
 ```javascript
