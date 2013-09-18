@@ -2,50 +2,66 @@ var Paladin = (function () {
   'use strict';
   var paladin = {};
   paladin.compose = function (args) {
-
+    var fn;
     function Compositor(args) {
-      return function() {
-        var o = args[0],
+      return function(args) {
+        var
           i = 0,
           len = args.length,
-          obj;
-        
+          obj,
+          prop;
+
         for (i; i < len; i += 1) {
           (args[i]).call(this);
         }  
       }
     }
-    
-    return function (states, init, modules) {
-      var fn = Compositor(args),
-        obj = new fn(args),
-        prop,
-        i,
-        len;
+    fn = Compositor(args);
 
-      if (states !== undefined) {
-        for (prop in states) {
-          if (states.hasOwnProperty(prop)) {
-            obj[prop] = states[prop];
+    return function (states, init, modules) {
+      
+        
+      var prop,
+        i,
+        len,
+        self = this;
+
+      fn.call(this, args);
+
+      this.states = function(states) {
+        var prop;
+        if (states !== undefined) {
+          for (prop in states) {
+            if (states.hasOwnProperty(prop)) {
+              this[prop] = states[prop];
+            }
           }
         }
-      }
+      };
+      
+      this.init = function(init) {
+        var prop;
+        for (prop in init) {
+          if (this.hasOwnProperty(prop) && typeof this[prop] === 'function' && Array.isArray(init[prop])) {
+            this[prop].apply(this, init[prop]);
+          }
+        }  
+      };
 
-      for (prop in init) {
-        if (obj.hasOwnProperty(prop) && typeof obj[prop] === 'function' && Array.isArray(init[prop])) {
-          obj[prop].apply(obj, init[prop]);
+      this.modules = function(modules) {
+        var i = 0, len;
+        if (Array.isArray(modules)) {
+          len = modules.length;
+          for (i; i < len; i += 1) {
+            paladin.addModule(this, modules[i]);
+          }
         }
-      }
+      };
 
+      !!states && this.states(states);
+      !!init && this.init(init);
+      !!modules && this.modules(modules);
 
-      if (!!modules && Array.isArray(modules)) {
-        len = modules.length;
-        for (i = 0; i < len; i += 1) {
-          paladin.addModule(obj, modules[i]);
-        }
-      }
-
-      return obj;
     };
   };
 

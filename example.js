@@ -1,5 +1,4 @@
 // example
-
 var Paladin = require('./paladin.js');
 
 function Car() {
@@ -23,10 +22,10 @@ function Engine() {
 }
 
 function CDPlayer() {
-  var playlist = [];
-  var position = -1;
-  var isPlaying = false;
-  var self = this;
+  var playlist = [],
+    position = -1;
+    isPlaying = false;
+    self = this;
   
   function playing() {
     console.log(self.model + ' -> Playing: ' + playlist[position]); 
@@ -87,8 +86,8 @@ function CDPlayer() {
   };
 }
 
-
-var c = Paladin.compose([Car, Engine, CDPlayer])({ model: 'Ferrari Paladin' });
+var simpleCar = Paladin.compose([Car, Engine, CDPlayer]);
+var c = new simpleCar({ model: 'Ferrari Paladin' });
 c.start()
   .addTrack('Cirith Ungol - Atom Smasher')
   .addTrack('Manilla Road - Astronomica')
@@ -114,9 +113,12 @@ function Sorcerer () {
 
 function Warrior () {
   var weapon = '';
-  this.setWeapon = function (weaponName) {
-    weapon = weaponName;
+  this.setWeapon = function (weaponObject) {
+    weapon = weaponObject;
     return this;
+  };
+  this.getWeapon = function() {
+    return weapon;
   };
 }
 
@@ -135,23 +137,38 @@ function skills() {
   return skillsModule;
 }
 
+function Sword() {
+  var name = '';
+  this.setName = function(weaponName) {
+    name = weaponName;
+  };
+  this.getName = function() {
+    return name;
+  };
+}
 
-var warMage = Paladin.compose([Character, Sorcerer, Warrior]);
+function Demon() {
+  this.suckLife = function() {
+    console.log('I\'m sucking life out of my victim');
+  }
+}
 
-var superMage = Paladin.compose([warMage, function Test() { this.test = 'test....'; }]);
-
-var tester = new superMage( {name: 'Testter'});
-console.log(tester);
-
-function battleCasting() {
-  console.log(this.name + ' is battle casting!');
+function battleCast() {
+  console.log(this.name + ' is casting spells while wielding ' + this.getWeapon().getName() );
   return this;
 }
 
-var Elric = new warMage({ name: 'Elric', fight: battleCasting }, { setWeapon: ['Stormbringer'] }, [ skills ]);
-var Yrkoon = new warMage({ name: 'Yrkoon', fight: function() { console.log('Yrkoon swinging his sword!'); }}, { setWeapon: ['normal sword']});
+
+var DemonSword = Paladin.compose([Sword, Demon]),
+  Stormbringer = new DemonSword({}, { setName : ['Stormbringer']}),
+  MournBlade = new DemonSword({}, { setName : ['MournBlade']});
+
+var Melnibonean = Paladin.compose([Character, Sorcerer, Warrior]),
+  Elric = new Melnibonean({name: 'Elric', fight: battleCast }, 
+    { setWeapon: [Stormbringer] },
+    [ skills ]),
+  Yrkoon = new Melnibonean({name: 'Yrkoon'}, { setWeapon: [MournBlade] });
 
 Elric.fight();
-Yrkoon.fight();
-Elric.skills.addSkill('Summon Auroch')('Wield Stormbringer')('Blow the horn of Doom');
-console.log(Elric.skills.getSkills().join(', '));
+Elric.skills.addSkill('Summon Arioch')('Destroy World');
+console.log('Elric has the following skills: ' + Elric.skills.getSkills().join(', '));
