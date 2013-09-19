@@ -134,6 +134,15 @@ myCar.OilTank.fill();
 myCar.CarTank.fill();
 ```
 
+## Composing the Composite
+
+As the result of a composition is a function, you can reuse that to further re-compose it.
+```javascript
+var simpleCar = Paladin.compose([Car, Engine]);
+var coolCar = Paladin.compose([simeplCar, CDPlayer]);
+var DeLoreanTimeMachine = Paladin.compose([coolCar, TimeMachine]);
+```
+
 ## Complete Example
 
 And finally a more complete example. A javascript summary of Moorcock's Stormbringer Saga...
