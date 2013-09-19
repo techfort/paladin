@@ -145,7 +145,7 @@ var DeLoreanTimeMachine = Paladin.compose([coolCar, TimeMachine]);
 
 ## Complete Example
 
-And finally a more complete example. A javascript summary of Moorcock's Stormbringer Saga...
+And finally a more complete example. A javascript summary of Moorcock's Stormbringer Saga... ***spoiler alert***
 
 ```javascript
 /**
@@ -211,6 +211,10 @@ function battleCast() {
   return this;
 }
 
+function destroyWorld() {
+  console.log('Blowing the Horn of Fate and destroying the world right now....');
+}
+
 // create a sword that's also a demon
 var DemonSword = Paladin.compose([Sword, Demon]),
   // Stormbringer is the coolest sword in the universe
@@ -221,7 +225,7 @@ var DemonSword = Paladin.compose([Sword, Demon]),
 // create the race of Melnibone'
 var Melnibonean = Paladin.compose([Character, Sorcerer, Warrior]),
   // create Elric, the anithero and attach the battleCast method alised as fight
-  Elric = new Melnibonean({name: 'Elric', fight: battleCast },
+  Elric = new Melnibonean({name: 'Elric', fight: battleCast, destroy: destroyWorld },
     // set Elric's weapon to Stormbringer
     { setWeapon: [Stormbringer] },
     // add the skills module (namespaced to skills)
@@ -232,7 +236,9 @@ var Melnibonean = Paladin.compose([Character, Sorcerer, Warrior]),
 // let's test everything works as supposed
 Elric.fight();
 // this is cool because addSkill returns addSkill so you can chain brackets
-Elric.skills.addSkill('Summon Arioch')('Destroy World')('Be and Albino Prince');
+// until - of course - Elric destroys the world...
+Elric.skills.addSkill('Summon Arioch')('Be and Albino Prince')('Destroy World');
 // and let's print it out
 console.log('Elric has the following skills: ' + Elric.skills.getSkills().join(', '));
+Elric.destroyWorld();
 ```
