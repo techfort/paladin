@@ -3,32 +3,24 @@ var Paladin = (function () {
   var paladin = {};
   paladin.compose = function (args) {
     var fn;
-    function Compositor(args) {
-      return function(args) {
+    function Compositor() {
+      return function (args) {
         var
           i = 0,
-          len = args.length,
-          obj,
-          prop;
+          len = args.length;
 
         for (i; i < len; i += 1) {
           (args[i]).call(this);
-        }  
-      }
+        }
+      };
     }
-    fn = Compositor(args);
+    fn = new Compositor(args);
 
     return function (states, init, modules) {
-      
-        
-      var prop,
-        i,
-        len,
-        self = this;
 
       fn.call(this, args);
 
-      this.states = function(states) {
+      this.states = function (states) {
         var prop;
         if (states !== undefined) {
           for (prop in states) {
@@ -38,17 +30,19 @@ var Paladin = (function () {
           }
         }
       };
-      
-      this.init = function(init) {
+
+      this.init = function (init) {
         var prop;
         for (prop in init) {
-          if (this.hasOwnProperty(prop) && typeof this[prop] === 'function' && Array.isArray(init[prop])) {
-            this[prop].apply(this, init[prop]);
+          if (this.hasOwnProperty(prop)) {
+            if (typeof this[prop] === 'function' && Array.isArray(init[prop])) {
+              this[prop].apply(this, init[prop]);
+            }
           }
-        }  
+        }
       };
 
-      this.modules = function(modules) {
+      this.modules = function (modules) {
         var i = 0, len;
         if (Array.isArray(modules)) {
           len = modules.length;
@@ -70,17 +64,13 @@ var Paladin = (function () {
         this.modules(modules);
       }
 
-      
-      
-
     };
   };
 
-  
-  paladin.addModule = function(parent, module) {
-    parent[arguments[1].name] = (module).call(parent);
+  paladin.addModule = function (parent, module) {
+    parent[arguments[1].name] = module.call(parent);
   };
-  
+
   return paladin;
 }());
 
