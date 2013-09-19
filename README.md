@@ -240,5 +240,5 @@ Elric.fight();
 Elric.skills.addSkill('Summon Arioch')('Be and Albino Prince')('Destroy World');
 // and let's print it out
 console.log('Elric has the following skills: ' + Elric.skills.getSkills().join(', '));
-Elric.destroyWorld();
+Elric.destroy();
 ```
