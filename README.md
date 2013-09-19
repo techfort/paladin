@@ -26,7 +26,7 @@ As `Paladin.compose` is returning a function you can even create a simpleCar by 
 
 `var ford = Paladin.compose([Car, Engine])({ model: 'Ford'});`
 
-`ford` is a Car, and the Engine methods have a Car context!
+`ford` is a Car, and the Engine methods have a common context!
 
 Naturally an Engine can be mounted on a `Plane` for example...
 
