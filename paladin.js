@@ -58,9 +58,20 @@ var Paladin = (function () {
         }
       };
 
-      !!states && this.states(states);
-      !!init && this.init(init);
-      !!modules && this.modules(modules);
+      if (!!states) {
+        this.states(states);
+      }
+
+      if (!!init) {
+        this.init(init);
+      }
+
+      if (!!modules) {
+        this.modules(modules);
+      }
+
+      
+      
 
     };
   };
