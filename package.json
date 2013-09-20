@@ -1,0 +1,32 @@
+{
+  "name": "paladin",
+  "version": "0.1.0",
+  "description": "javascript object composition library",
+  "main": "paladin.js",
+  "dependencies": {
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/techfort/paladin.git"
+  },
+  "keywords": [
+    "javascript",
+    "object",
+    "composition",
+    "prototype",
+    "prototypal",
+    "inheritance",
+    "modules",
+    "module",
+    "pattern"
+  ],
+  "author": "Joe Minichino <joe.minichino@gmail.com> (http://github.com/techfort)",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/techfort/paladin/issues"
+  }
+}
