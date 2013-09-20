@@ -26,7 +26,7 @@ As `Paladin.compose` is returning a function you can even create a simpleCar by 
 
 `var ford = Paladin.compose([Car, Engine])({ model: 'Ford'});`
 
-`ford` is a Car, and the Engine methods have a common context!
+`ford` is a Car, and an Engine whose methods have a common context!
 
 Naturally an Engine can be mounted on a `Plane` for example...
 
@@ -50,7 +50,7 @@ c.start()
 
 ## States, init and modules
 
-The copmosed function takes three optional parameters, states, init and modules.
+The composed function takes three optional parameters, states, init and modules.
 The states object sets public members to the passed values. I.e. `{ name: 'joe' }` sets the public member name to joe.
 With this you can attach functions as methods (see example below).
 Init takes method names and arrays for parameters. I.e. `{ setName: ['joe'] }` calls the method `setName` and passes the parameter `'joe'`.
