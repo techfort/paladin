@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Paladin : Javascript composition and delegation library" />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Paladin</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/techfort/paladin">View on GitHub</a>
+
+          <h1 id="project_title">Paladin</h1>
+          <h2 id="project_tagline">Javascript composition and delegation library</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/techfort/paladin/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/techfort/paladin/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a name="paladin" class="anchor" href="#paladin"><span class="octicon octicon-link"></span></a>Paladin</h1>
+
+<p>Javascript Object Composition library, combine constructors and create objects as needed.
+Leverage Javascript's own unique feature - <code>prototype</code> - but also forget about ever typing it again!</p>
+
+<h1>
+<a name="favour-composition-over-inheritance" class="anchor" href="#favour-composition-over-inheritance"><span class="octicon octicon-link"></span></a>Favour composition over inheritance</h1>
+
+<p>With Paladin you can put together all your pieces into objects which you can create on-the-fly.</p>
+
+<p>You can re-use your components and combine them together, cache them into functions if you intend to
+create multiple objects of the same type, or just create it on the fly, leveraging javascript's higher-order
+functions.</p>
+
+<p>Say you have a <code>Car</code>. All Cars have an <code>Engine</code>, but not all Cars have a <code>CDPlayer</code>.</p>
+
+<p>With Paladin you can simply do:</p>
+
+<p><code>var simpleCar = Paladin.compose([Car, Engine]);</code></p>
+
+<p>then pass some states when you instantiate the car:</p>
+
+<p><code>var toyota = simpleCar({ model: 'Toyota' });</code></p>
+
+<p>As <code>Paladin.compose</code> is returning a function you can even create a simpleCar by doing:</p>
+
+<p><code>var ford = Paladin.compose([Car, Engine])({ model: 'Ford'});</code></p>
+
+<p><code>ford</code> is a Car, and the Engine methods have a common context!</p>
+
+<p>Naturally an Engine can be mounted on a <code>Plane</code> for example...</p>
+
+<p><code>var boeing = Paladin.compose([Plane, Engine])({ model: '777' });</code></p>
+
+<p>Now let's create a car with a CDPlayer, let's start it and rock our playlist:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">c</span> <span class="o">=</span> <span class="nx">Paladin</span><span class="p">.</span><span class="nx">compose</span><span class="p">([</span><span class="nx">Car</span><span class="p">,</span> <span class="nx">Engine</span><span class="p">,</span> <span class="nx">CDPlayer</span><span class="p">])({</span> <span class="nx">model</span><span class="o">:</span> <span class="s1">'Ferrari Paladin'</span> <span class="p">});</span>
+<span class="nx">c</span><span class="p">.</span><span class="nx">start</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">addTrack</span><span class="p">(</span><span class="s1">'Cirith Ungol - Atom Smasher'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">addTrack</span><span class="p">(</span><span class="s1">'Manilla Road - Astronomica'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">addTrack</span><span class="p">(</span><span class="s1">'Warlord - Black Mass'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">addTrack</span><span class="p">(</span><span class="s1">'Salem\'s Wych - Betrayer of Kings'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">play</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">next</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">pause</span><span class="p">();</span>
+</pre></div>
+
+<h2>
+<a name="states-init-and-modules" class="anchor" href="#states-init-and-modules"><span class="octicon octicon-link"></span></a>States, init and modules</h2>
+
+<p>The copmosed function takes three optional parameters, states, init and modules.
+The states object sets public members to the passed values. I.e. <code>{ name: 'joe' }</code> sets the public member name to joe.
+With this you can attach functions as methods (see example below).
+Init takes method names and arrays for parameters. I.e. <code>{ setName: ['joe'] }</code> calls the method <code>setName</code> and passes the parameter <code>'joe'</code>.</p>
+
+<h3>
+<a name="states" class="anchor" href="#states"><span class="octicon octicon-link"></span></a>States</h3>
+
+<p>Once you generated a composited function, you can create your objects by passing a states object, but you can also call the states method
+subsequently to the object creation. I.e.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">simpleCar</span> <span class="o">=</span> <span class="nx">Paladin</span><span class="p">.</span><span class="nx">compose</span><span class="p">([</span><span class="nx">Car</span><span class="p">,</span> <span class="nx">Engine</span><span class="p">]);</span>
+<span class="kd">var</span> <span class="nx">myCar</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">simpleCar</span><span class="p">();</span>
+<span class="nx">myCar</span><span class="p">.</span><span class="nx">states</span><span class="p">({</span> <span class="nx">model</span><span class="o">:</span> <span class="s1">'My Car'</span><span class="p">});</span>
+</pre></div>
+
+<p>You can also attach methods with states:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">function</span> <span class="nx">Break</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Eeeeeeeeeeekkkkk!'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">myBreakingCar</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">simpleCar</span><span class="p">({</span> <span class="nx">skid</span><span class="o">:</span> <span class="nx">Break</span> <span class="p">});</span>
+<span class="nx">myBreakingCar</span><span class="p">.</span><span class="nx">skid</span><span class="p">();</span> <span class="c1">// eeeeeeeeeeeeeeeeeeekkkk!</span>
+</pre></div>
+
+<h3>
+<a name="init" class="anchor" href="#init"><span class="octicon octicon-link"></span></a>Init</h3>
+
+<p>Similarly to states, you can pass an object as the second argument which will call methods on the newly created object. The object structure is 
+<code>{ methodName: [ArrayOfArguments] }</code>.</p>
+
+<p>For example:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">myCar</span><span class="p">.</span><span class="nx">init</span><span class="p">({</span> <span class="nx">start</span><span class="o">:</span> <span class="p">[],</span> <span class="nx">setModel</span><span class="o">:</span> <span class="p">[</span><span class="s1">'Ferrari Paladin'</span><span class="p">]});</span>
+</pre></div>
+
+<h3>
+<a name="modules" class="anchor" href="#modules"><span class="octicon octicon-link"></span></a>Modules</h3>
+
+<p>Modules is interesting in two respects:</p>
+
+<ul>
+<li>it allows functions adopting the Module pattern to be attached to another function</li>
+<li>it namespaces the methods to avoid method collision/override</li>
+</ul><p>So let's take a look at an example to understand:</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">function</span> <span class="nx">CarTank</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">capacity</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
+    <span class="nx">current</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">fill</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">current</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span> <span class="c1">// tank is filled with fuel</span>
+    <span class="p">},</span>
+    <span class="nx">consume</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">capacity</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">current</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'We\'re out of fuel!'</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">OilTank</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">capacity</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="nx">current</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="k">return</span> <span class="p">{</span>
+    <span class="nx">fill</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">current</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span> <span class="c1">// oil tank is filled with fuel</span>
+    <span class="p">},</span>
+    <span class="nx">consume</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">capacity</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Both modules have a fill method so we may have run into problems...
+Using the modules method the <code>fill()</code> method gets namespaced.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="nx">myCar</span><span class="p">.</span><span class="nx">modules</span><span class="p">([</span><span class="nx">CarTank</span><span class="p">,</span> <span class="nx">OilTank</span><span class="p">]);</span>
+<span class="c1">// let's refill oil and fuel</span>
+<span class="nx">myCar</span><span class="p">.</span><span class="nx">OilTank</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+<span class="nx">myCar</span><span class="p">.</span><span class="nx">CarTank</span><span class="p">.</span><span class="nx">fill</span><span class="p">();</span>
+</pre></div>
+
+<h2>
+<a name="composing-the-composite" class="anchor" href="#composing-the-composite"><span class="octicon octicon-link"></span></a>Composing the Composite</h2>
+
+<p>As the result of a composition is a function, you can reuse that to further re-compose it.</p>
+
+<div class="highlight highlight-javascript"><pre><span class="kd">var</span> <span class="nx">simpleCar</span> <span class="o">=</span> <span class="nx">Paladin</span><span class="p">.</span><span class="nx">compose</span><span class="p">([</span><span class="nx">Car</span><span class="p">,</span> <span class="nx">Engine</span><span class="p">]);</span>
+<span class="kd">var</span> <span class="nx">coolCar</span> <span class="o">=</span> <span class="nx">Paladin</span><span class="p">.</span><span class="nx">compose</span><span class="p">([</span><span class="nx">simeplCar</span><span class="p">,</span> <span class="nx">CDPlayer</span><span class="p">]);</span>
+<span class="kd">var</span> <span class="nx">DeLoreanTimeMachine</span> <span class="o">=</span> <span class="nx">Paladin</span><span class="p">.</span><span class="nx">compose</span><span class="p">([</span><span class="nx">coolCar</span><span class="p">,</span> <span class="nx">TimeMachine</span><span class="p">]);</span>
+</pre></div>
+
+<h2>
+<a name="complete-example" class="anchor" href="#complete-example"><span class="octicon octicon-link"></span></a>Complete Example</h2>
+
+<p>And finally a more complete example. A javascript summary of Moorcock's Stormbringer Saga... <strong><em>spoiler alert</em></strong></p>
+
+<div class="highlight highlight-javascript"><pre><span class="cm">/**</span>
+<span class="cm"> * A javascript version of Moorcock's Stormbringer Saga</span>
+<span class="cm"> */</span>
+
+<span class="kd">function</span> <span class="nx">Character</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">Sorcerer</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">cast</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">spell</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">' is casting '</span> <span class="o">+</span> <span class="nx">spell</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">Warrior</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">weapon</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setWeapon</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">weaponObject</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">weapon</span> <span class="o">=</span> <span class="nx">weaponObject</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getWeapon</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">weapon</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">// module pattern function</span>
+<span class="kd">function</span> <span class="nx">skills</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">skills</span> <span class="o">=</span> <span class="p">[],</span>
+    <span class="nx">skillsModule</span><span class="p">;</span>
+  <span class="nx">skillsModule</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">addSkill</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">skills</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">skillsModule</span><span class="p">.</span><span class="nx">addSkill</span><span class="p">;</span>
+    <span class="p">},</span>
+    <span class="nx">getSkills</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">return</span> <span class="nx">skills</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">};</span>
+  <span class="k">return</span> <span class="nx">skillsModule</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">Sword</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">name</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">setName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">weaponName</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">name</span> <span class="o">=</span> <span class="nx">weaponName</span><span class="p">;</span>
+  <span class="p">};</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">getName</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">name</span><span class="p">;</span>
+  <span class="p">};</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">Demon</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">suckLife</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'I\'m sucking life out of my victim'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">battleCast</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">' is casting spells while wielding '</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">getWeapon</span><span class="p">().</span><span class="nx">getName</span><span class="p">()</span> <span class="p">);</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">destroyWorld</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Blowing the Horn of Fate and destroying the world right now....'</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// create a sword that's also a demon</span>
+<span class="kd">var</span> <span class="nx">DemonSword</span> <span class="o">=</span> <span class="nx">Paladin</span><span class="p">.</span><span class="nx">compose</span><span class="p">([</span><span class="nx">Sword</span><span class="p">,</span> <span class="nx">Demon</span><span class="p">]),</span>
+  <span class="c1">// Stormbringer is the coolest sword in the universe</span>
+  <span class="nx">Stormbringer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DemonSword</span><span class="p">({},</span> <span class="p">{</span> <span class="nx">setName</span> <span class="o">:</span> <span class="p">[</span><span class="s1">'Stormbringer'</span><span class="p">]}),</span>
+  <span class="c1">// MournBlade is Stormbringer's twin blade</span>
+  <span class="nx">MournBlade</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DemonSword</span><span class="p">({},</span> <span class="p">{</span> <span class="nx">setName</span> <span class="o">:</span> <span class="p">[</span><span class="s1">'MournBlade'</span><span class="p">]});</span>
+
+<span class="c1">// create the race of Melnibone'</span>
+<span class="kd">var</span> <span class="nx">Melnibonean</span> <span class="o">=</span> <span class="nx">Paladin</span><span class="p">.</span><span class="nx">compose</span><span class="p">([</span><span class="nx">Character</span><span class="p">,</span> <span class="nx">Sorcerer</span><span class="p">,</span> <span class="nx">Warrior</span><span class="p">]),</span>
+  <span class="c1">// create Elric, the anithero and attach the battleCast method alised as fight</span>
+  <span class="nx">Elric</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Melnibonean</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s1">'Elric'</span><span class="p">,</span> <span class="nx">fight</span><span class="o">:</span> <span class="nx">battleCast</span><span class="p">,</span> <span class="nx">destroy</span><span class="o">:</span> <span class="nx">destroyWorld</span> <span class="p">},</span>
+    <span class="c1">// set Elric's weapon to Stormbringer</span>
+    <span class="p">{</span> <span class="nx">setWeapon</span><span class="o">:</span> <span class="p">[</span><span class="nx">Stormbringer</span><span class="p">]</span> <span class="p">},</span>
+    <span class="c1">// add the skills module (namespaced to skills)</span>
+    <span class="p">[</span> <span class="nx">skills</span> <span class="p">]),</span>
+  <span class="c1">// Yrkoon is Elric's evil cousin who happens to wield MournBlade</span>
+  <span class="nx">Yrkoon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Melnibonean</span><span class="p">({</span><span class="nx">name</span><span class="o">:</span> <span class="s1">'Yrkoon'</span><span class="p">},</span> <span class="p">{</span> <span class="nx">setWeapon</span><span class="o">:</span> <span class="p">[</span><span class="nx">MournBlade</span><span class="p">]</span> <span class="p">});</span>
+
+<span class="c1">// let's test everything works as supposed</span>
+<span class="nx">Elric</span><span class="p">.</span><span class="nx">fight</span><span class="p">();</span>
+<span class="c1">// this is interesting because addSkill() returns addSkill so you can chain brackets</span>
+<span class="c1">// until - of course - Elric destroys the world...</span>
+<span class="nx">Elric</span><span class="p">.</span><span class="nx">skills</span><span class="p">.</span><span class="nx">addSkill</span><span class="p">(</span><span class="s1">'Summon Arioch'</span><span class="p">)(</span><span class="s1">'Be and Albino Prince'</span><span class="p">)(</span><span class="s1">'Destroy World'</span><span class="p">);</span>
+<span class="c1">// and let's print it out</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'Elric has the following skills: '</span> <span class="o">+</span> <span class="nx">Elric</span><span class="p">.</span><span class="nx">skills</span><span class="p">.</span><span class="nx">getSkills</span><span class="p">().</span><span class="nx">join</span><span class="p">(</span><span class="s1">', '</span><span class="p">));</span>
+<span class="nx">Elric</span><span class="p">.</span><span class="nx">destroy</span><span class="p">();</span>
+</pre></div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Paladin maintained by <a href="https://github.com/techfort">techfort</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
