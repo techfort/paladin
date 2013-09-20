@@ -1,19 +1,22 @@
 var Paladin = (function () {
   'use strict';
+
   var paladin = {};
+
+  function Compositor(args) {
+    return function (args) {
+      var i = 0,
+        len = args.length;
+
+      for (i; i < len; i += 1) {
+        (args[i]).call(this);
+      }
+    };
+  }
+
   paladin.compose = function (args) {
     var fn;
-    function Compositor() {
-      return function (args) {
-        var
-          i = 0,
-          len = args.length;
-
-        for (i; i < len; i += 1) {
-          (args[i]).call(this);
-        }
-      };
-    }
+    
     fn = new Compositor(args);
 
     return function (states, init, modules) {
