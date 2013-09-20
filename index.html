@@ -32,7 +32,7 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a name="paladin" class="anchor" href="#paladin"><span class="octicon octicon-link"></span></a>Paladin</h1>
+<a name="paladin" class="anchor" href="#paladin"><span class="octicon octicon-link"></span></a>paladin</h1>
 
 <p>Javascript Object Composition library, combine constructors and create objects as needed.
 Leverage Javascript's own unique feature - <code>prototype</code> - but also forget about ever typing it again!</p>
@@ -60,7 +60,7 @@ functions.</p>
 
 <p><code>var ford = Paladin.compose([Car, Engine])({ model: 'Ford'});</code></p>
 
-<p><code>ford</code> is a Car, and the Engine methods have a common context!</p>
+<p><code>ford</code> is a Car, and an Engine whose methods have a common context!</p>
 
 <p>Naturally an Engine can be mounted on a <code>Plane</code> for example...</p>
 
@@ -84,7 +84,7 @@ functions.</p>
 <h2>
 <a name="states-init-and-modules" class="anchor" href="#states-init-and-modules"><span class="octicon octicon-link"></span></a>States, init and modules</h2>
 
-<p>The copmosed function takes three optional parameters, states, init and modules.
+<p>The composed function takes three optional parameters, states, init and modules.
 The states object sets public members to the passed values. I.e. <code>{ name: 'joe' }</code> sets the public member name to joe.
 With this you can attach functions as methods (see example below).
 Init takes method names and arrays for parameters. I.e. <code>{ setName: ['joe'] }</code> calls the method <code>setName</code> and passes the parameter <code>'joe'</code>.</p>
