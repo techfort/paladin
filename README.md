@@ -230,12 +230,12 @@ var Melnibonean = Paladin.compose([Character, Sorcerer, Warrior]),
     { setWeapon: [Stormbringer] },
     // add the skills module (namespaced to skills)
     [ skills ]),
-  // Yrkoon is just lame but he happens to wield MournBlade
+  // Yrkoon is Elric's evil cousin who happens to wield MournBlade
   Yrkoon = new Melnibonean({name: 'Yrkoon'}, { setWeapon: [MournBlade] });
 
 // let's test everything works as supposed
 Elric.fight();
-// this is cool because addSkill returns addSkill so you can chain brackets
+// this is interesting because addSkill() returns addSkill so you can chain brackets
 // until - of course - Elric destroys the world...
 Elric.skills.addSkill('Summon Arioch')('Be and Albino Prince')('Destroy World');
 // and let's print it out
