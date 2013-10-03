@@ -1,7 +1,8 @@
-paladin
+Paladin
 =======
 
-Javascript Object Composition library, combine constructors and create objects as needed.
+This is really just an experiment!
+Paladin is a Javascript Object Composition library, combine constructors and create objects as needed.
 Leverage Javascript's own unique feature - `prototype` - but also forget about ever typing it again!
 
 # Favour composition over inheritance
